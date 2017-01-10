@@ -13,11 +13,19 @@ use Illuminate\Http\Response;
 |
 */
 
-$app->group(['prefix' => 'api'], function () use ($app) {
+$app->group(['prefix' => 'api/v1'], function () use ($app) {
 
-  $app->get('/v1/about', function () use ($app) {
+  $app->get('/about', function () use ($app) {
       // return response($app->version());
       return response()->json(["version" => $app->version()]);
+  });
+
+  $app->get('/files', function () use ($app) {
+
+  });
+
+  $app->post('/files', function () use $(app) {
+
   });
 
 });
