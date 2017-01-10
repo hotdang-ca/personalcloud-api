@@ -33,7 +33,7 @@ class FilesController extends Controller {
 
     $fileInfo = DB::table('files')->where('storage_name', $filename)->first();
     if (! $fileInfo) {
-      return response()->json($this->ERROR_404);
+      return response()->json($this->ERROR_404, 404);
     }
 
     $diskName = $fileInfo->storage_name;
@@ -46,7 +46,7 @@ class FilesController extends Controller {
       "ip_address" => $fileInfo->uploader_ip,
       "created_at" => $fileInfo->created_at,
       "download_path" => $url
-    ]);
+    ], 200);
   }
 
   /**
@@ -61,7 +61,7 @@ class FilesController extends Controller {
   public function fetch(Request $request, $filename) {
     $fileInfo = DB::table('files')->where('storage_name', $filename)->first();
     if (! $fileInfo) {
-      return response()->json($this->ERROR_404);
+      return response()->json($this->ERROR_404, 404);
     }
 
     // TODO:
@@ -73,7 +73,7 @@ class FilesController extends Controller {
     if (file_exists($pathToFile)) {
       return response()->download($pathToFile, $fileInfo->original_name);
     } else {
-      return response()->json($this->ERROR_404);
+      return response()->json($this->ERROR_404, 404);
     }
   }
 
@@ -94,7 +94,7 @@ class FilesController extends Controller {
       $ipAddress = $request->ip();
 
       if (in_array($extension, $this->disallowedExtensions)) {
-        return response()->json($this->ERROR_415);
+        return response()->json($this->ERROR_415, 415);
       }
 
       // TODO: externalize this somewhere. It gives me a random string made up of these chars
@@ -124,10 +124,9 @@ class FilesController extends Controller {
       // TODO: public URL
       $url = url('/') . "/file/" . $storageName;
 
-      return response()->json(["location" => $url ]);
+      return response()->json(["location" => $url ], 200);
     } else {
-      // something bad happened
-      return response()->json($this->ERROR_400);
+      return response()->json($this->ERROR_400, 400);
     }
   }
 }
