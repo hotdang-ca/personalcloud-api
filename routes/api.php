@@ -13,19 +13,27 @@ use Illuminate\Http\Response;
 |
 */
 
+$app->get('/upload', function () use ($app) {
+  $page = <<<HTML
+  <p>Upload a file</p>
+  <form action="/api/v1/file" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" /><br/>
+    <input type="text" name="description" /><br/>
+
+    <input type="submit" value="Send'r on Up!" />
+  </form>
+HTML;
+
+  return response($page, 200);
+});
+
 $app->group(['prefix' => 'api/v1'], function () use ($app) {
 
   $app->get('/about', function () use ($app) {
-      // return response($app->version());
       return response()->json(["version" => $app->version()]);
   });
 
-  $app->get('/files', function () use ($app) {
-
-  });
-
-  $app->post('/files', function () use $(app) {
-
-  });
+  $app->post('/file', 'FilesController@upload');
+  $app->get('/file/{filename}', 'FilesController@fetch');
 
 });
