@@ -18,8 +18,6 @@ $app->get('/upload', function () use ($app) {
   <p>Upload a file</p>
   <form action="/api/v1/file" method="post" enctype="multipart/form-data">
     <input type="file" name="file" /><br/>
-    <input type="text" name="description" /><br/>
-
     <input type="submit" value="Send'r on Up!" />
   </form>
 HTML;
