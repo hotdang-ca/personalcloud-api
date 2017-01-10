@@ -1,4 +1,4 @@
-# # Personal Cloud API
+# Personal Cloud API
 The personal cloud API is a small Lumen application that allows file uploads (excluding disallowed extensions). Files are stored in a private section of the application, and indexed by the database.
 
 ## Getting Started
@@ -6,8 +6,9 @@ To begin using the Personal Cloud API, do the following:
 1. Clone the repository to your own server
 2. Ensure proper write permissions on `storage/app` which files are kept.
 3. Set up your `.env` file to point to your database of choice (standard Laravel database drivers are included in Lumen).
-4. Run `php artisan migrate` and ensure you get a positive result
-5. Test out file uploads at `servername/upload`
+4. Run `composer install` or whatever you have composer set as to install dependences (only the core dependencies for Lumen are required at present)
+5. Run `php artisan migrate` and ensure you get a positive result
+6. Test out file uploads at `servername/upload`
 
 ## To use the API from a Mobile App / WebApp / Single Page App (SPA) / Toaster or Fridge
 Once you’re all set, you can send a `multipart/form-data` `POST` request to `/api/v1/file`. The endpoint only accepts one parameter, `file` which should be the actual file. Upon success, you will receive a JSON response with a `location` string node with the publicly accessible URL of the file.
