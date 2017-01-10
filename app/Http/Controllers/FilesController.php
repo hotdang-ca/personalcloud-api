@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use DB;
 
 class FilesController extends Controller {
 
@@ -31,10 +32,11 @@ class FilesController extends Controller {
 
     if ($request->file('file')->isValid()) {
 
-      $filename = $request->file('file')->getClientOriginalName();
+      $fileName = $request->file('file')->getClientOriginalName();
       $extension = $request->file('file')->getClientOriginalExtension();
+      $ipAddress = $request->ip();
 
-      // TODO: externalize this somewhere
+      // TODO: externalize this somewhere. It gives me a random string made up of these chars
       $characters = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTVWXYZ23456789';
       $string = '';
       $max = strlen($characters) - 1;
@@ -42,16 +44,26 @@ class FilesController extends Controller {
         $string .= $characters[mt_rand(0, $max)];
       }
 
-      $destinationPath = rtrim(app()->basePath('storage/app'), '/');
-
       // TODO: check for name clash
       $storageName = $string . '.' . $extension;
 
-      // todo: save the file to the database
-
+      // Move file
+      $destinationPath = rtrim(app()->basePath('storage/app'), '/');
       $request->file('file')->move($destinationPath, $storageName);
 
-      return response()->json(["location" => "http://.../files/$storageName"]);
+      // Save to Database
+      // TODO: injection protection
+      DB::table('files')->insert([
+        'original_name' => $fileName,
+        'storage_name'  => $storageName,
+        'extension'     => $extension,
+        'uploader_ip'   => $ipAddress
+      ]);
+
+      // TODO: public URL
+      $url = url('/') . "/files/" . $storageName;
+
+      return response()->json(["location" => $url ]);
     }
   }
 }
