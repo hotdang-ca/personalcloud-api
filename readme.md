@@ -1,21 +1,28 @@
-# Lumen PHP Framework
+# # Personal Cloud API
+The personal cloud API is a small Lumen application that allows file uploads (excluding disallowed extensions). Files are stored in a private section of the application, and indexed by the database.
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://poser.pugx.org/laravel/lumen-framework/d/total.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/lumen-framework/v/stable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/lumen-framework/v/unstable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://poser.pugx.org/laravel/lumen-framework/license.svg)](https://packagist.org/packages/laravel/lumen-framework)
+## Getting Started
+To begin using the Personal Cloud API, do the following:
+1. Clone the repository to your own server
+2. Ensure proper write permissions on `storage/app` which files are kept.
+3. Set up your `.env` file to point to your database of choice (standard Laravel database drivers are included in Lumen).
+4. Run `php artisan migrate` and ensure you get a positive result
+5. Test out file uploads at `servername/upload`
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+## To use the API from a Mobile App / WebApp / Single Page App (SPA) / Toaster or Fridge
+Once you’re all set, you can send a `multipart/form-data` `POST` request to `/api/v1/file`. The endpoint only accepts one parameter, `file` which should be the actual file. Upon success, you will receive a JSON response with a `location` string node with the publicly accessible URL of the file.
 
-## Official Documentation
+Hitting that publicly accessible URL will return the file, with the original filename as when it was uploaded.
 
-Documentation for the framework can be found on the [Lumen website](http://lumen.laravel.com/docs).
+To restrict certain filetypes, there is a `disallowedExtensions` array belonging to the `FilesController` class. Those extensions will result in an HTTP error 415.
 
-## Security Vulnerabilities
+You can customize the messaging of the different type of errors by checking the `__constructor` of `FilesController`.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+If the file is too large, or other PHP-related configuration issues, you will get a Lumen-provided `500` error and a rather vulgar error message (you’re welcome…). Check your `php.ini` file for common snafus like `upload_max_filesize` and `post_max_size`.
+
 
 ## License
+The API is presently unlicensed. Any use is at your own risk.
 
-The Lumen framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+## See Also
+Coming soon… Android Sample App, iOS Sample App, React Sample App. And hey, maybe Angular too.
