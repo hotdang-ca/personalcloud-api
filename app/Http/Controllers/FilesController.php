@@ -8,12 +8,12 @@ use Illuminate\Http\UploadedFile;
 class FilesController extends Controller {
 
   public function fetch(Request $request, $filename) {
-        
+
     $_ERROR_404 = ['error' => ['code' => 404, 'description' => 'I have no clue which file you\'re trying to access. So you don\'t get any.']];
 
     $storedName = $filename . ".png";
 
-    $pathToFile = rtrim(app()->basePath('public/documents'), '/') . '/' . $storedName;
+    $pathToFile = rtrim(app()->basePath('storage/app'), '/') . '/' . $storedName;
     if (file_exists($pathToFile)) {
       return response()->download($pathToFile);
     } else {
@@ -42,7 +42,7 @@ class FilesController extends Controller {
         $string .= $characters[mt_rand(0, $max)];
       }
 
-      $destinationPath = rtrim(app()->basePath('public/documents'), '/');
+      $destinationPath = rtrim(app()->basePath('storage/app'), '/');
 
       // TODO: check for name clash
       $storageName = $string . '.' . $extension;
