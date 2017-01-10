@@ -27,13 +27,13 @@ HTML;
   return response($page, 200);
 });
 
-$app->group(['prefix' => 'api/v1'], function () use ($app) {
+$app->get('/file/{filename}', 'FilesController@fetch');
 
+$app->group(['prefix' => 'api/v1'], function () use ($app) {
   $app->get('/about', function () use ($app) {
       return response()->json(["version" => $app->version()]);
   });
 
+  $app->get('/file/{filename}', 'FilesController@info');
   $app->post('/file', 'FilesController@upload');
-  $app->get('/file/{filename}', 'FilesController@fetch');
-
 });
