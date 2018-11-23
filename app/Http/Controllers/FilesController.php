@@ -17,7 +17,7 @@ class FilesController extends Controller {
     $this->ERROR_413 = ['error' => ['code' => 413, 'description' => 'What are you trying to do?! That file is way too big.']];
 
     // LONG LINE ---->
-    $this->disallowedExtensions = array("exe","zip","tar","tgz","gz","rar","iso","bin","pif","dmg","msi","msp","com","scr","hta","htm","html","css","js","jsx","app","cpl","msc","jar","java","bat","cmd","vb","vbs","vbe","ws","wsc","wsf","wsh","ps1","ps1xml","ps2","ps2xml","psc1","psc2","scf","lnk","inf","reg");
+    $this->disallowedExtensions = array("exe","tar","tgz","gz","rar","iso","bin","pif","dmg","msi","msp","com","scr","hta","htm","html","css","js","jsx","app","cpl","msc","jar","java","bat","cmd","vb","vbs","vbe","ws","wsc","wsf","wsh","ps1","ps1xml","ps2","ps2xml","psc1","psc2","scf","lnk","inf","reg");
   }
 
   /**
