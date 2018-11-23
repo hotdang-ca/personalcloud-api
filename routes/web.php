@@ -13,6 +13,121 @@ use Illuminate\Http\Response;
 |
 */
 
+$app->get('/browse', function () use ($app) {
+  $page = <<<HTML
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>View All Files</title>
+      <style>
+        table {
+          width: 80%;
+          margin: 0px auto;
+        }
+
+        td, th {
+          width: 25%;
+          height: 56px;
+        }
+
+        .file {
+          padding: 8px 0;
+          background-color: #efefef;
+          border: 1px solid #a0a0a0;
+          justify-content: space-around;
+          align-items: flex-start;
+        }
+
+        .file > a {
+          font-size: 1.2rem;
+        }
+
+        .preview {
+          height: 40px;
+          width: auto;
+        }
+      </style>
+    </head>
+    <body>
+      <h1>All files</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Preview</th>
+            <th>Filename</th>
+            <th>Uploader</th>
+            <th>Extension</th>
+          </tr>
+        </thead>
+        <tbody id="files-table"></tbody>
+      </table>
+
+      <script>
+        var container = document.getElementById('files-table');
+        var xhr = new XMLHttpRequest();
+        var method = "GET"
+        var url = "/api/v1/files";
+        xhr.open(method, url, true);
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            if (!response) {
+              alert('Read error. Refresh.');
+            }
+
+            response.files.forEach(function(file) {
+
+              console.log('file', file);
+
+              var fileDescriptionNode = document.createElement('tr');
+              fileDescriptionNode.setAttribute('class', 'file');
+
+              // link
+              var fileDescriptionLinkContainer = document.createElement('td');
+              var fileDescriptionLink = document.createElement('a');
+              fileDescriptionLink.href = '/file/' + file.storage_name;
+              var fileDescriptionLinkText = document.createTextNode(file.original_name);
+              fileDescriptionLink.appendChild(fileDescriptionLinkText);
+              fileDescriptionLinkContainer.appendChild(fileDescriptionLink);
+
+              // extension
+              var fileExtensionContainer = document.createElement('td');
+              var fileExtensionText = document.createTextNode(file.extension);
+              fileExtensionContainer.appendChild(fileExtensionText);
+
+              // ip
+              var fileIpAddressContainer = document.createElement('td');
+              var fileIpAddressText = document.createTextNode(file.uploader_ip);
+              fileIpAddressContainer.appendChild(fileIpAddressText);
+
+              // preview...
+              var fileImageContainer = document.createElement('td');
+              if (['jpg', 'png', 'gif'].includes(file.extension)) {
+                var fileImage = document.createElement('img');
+                fileImage.src = '/file/' + file.storage_name;
+                fileImage.setAttribute('class', 'preview');
+                fileImageContainer.appendChild(fileImage);
+              }
+
+              fileDescriptionNode.appendChild(fileImageContainer);
+              fileDescriptionNode.appendChild(fileDescriptionLinkContainer);
+              fileDescriptionNode.appendChild(fileIpAddressContainer);
+              fileDescriptionNode.appendChild(fileExtensionContainer);
+
+              container.appendChild(fileDescriptionNode);
+
+            });
+          }
+        }
+        xhr.send();
+      </script>
+    </body>
+  </html>
+HTML;
+
+return response($page, 200);
+});
+
 $app->get('/upload', function () use ($app) {
   $page = <<<HTML
   <p>Upload a file</p>
@@ -198,7 +313,7 @@ $app->group(['prefix' => 'api/v1'], function () use ($app) {
   $app->get('/about', function () use ($app) {
       return response()->json(["version" => $app->version()]);
   });
-  $app->get('/browse', 'FilesController@list');
+  $app->get('/files', 'FilesController@list');
   $app->get('/file/{filename}', 'FilesController@info');
   $app->post('/file', 'FilesController@upload');
 });
