@@ -50,6 +50,14 @@ class FilesController extends Controller {
   }
 
   /**
+   * Shows all files in a table
+   */
+  public function list(Request $request) {
+    $files = DB::table('files')->get();
+    return response()->json(['files' => $files]);
+  }
+
+  /**
    * Provides the raw file requested
    *
    * @param Request   $request  Provided by lumen, describes the request
